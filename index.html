@@ -64,6 +64,82 @@
             color: var(--accent);
         }
 
+        /* --- SYSTEM DESIGN SECTION --- */
+        .system-container {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 40px;
+            align-items: center;
+            background: rgba(10, 10, 10, 0.5);
+            border: 1px solid rgba(0, 242, 255, 0.1);
+            padding: 40px;
+            border-radius: 12px;
+            backdrop-filter: blur(5px);
+        }
+
+        .system-image-box {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: border-color 0.3s;
+        }
+
+        .system-image-box:hover {
+            border-color: var(--accent);
+        }
+
+        .system-img {
+            width: 100%;
+            height: auto;
+            display: block;
+            filter: brightness(0.9) contrast(1.1);
+            transition: transform 0.5s;
+        }
+
+        .system-image-box:hover .system-img {
+            transform: scale(1.03);
+        }
+
+        .system-info h3 {
+            color: var(--white);
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            letter-spacing: 1px;
+        }
+
+        .system-info p {
+            color: var(--text-dim);
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+
+        .system-features {
+            list-style: none;
+        }
+
+        .system-features li {
+            position: relative;
+            padding-left: 25px;
+            margin-bottom: 12px;
+            color: var(--text-main);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .system-features li::before {
+            content: "▹";
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+        }
+
+        @media (max-width: 992px) {
+            .system-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
         .hero {
             height: 100vh;
             display: flex;
@@ -271,6 +347,7 @@
         <ul class="nav-links">
             <li><a href="#about">About</a></li>
             <li><a href="#major-project">Showcase</a></li>
+            <li><a href="#system-design">Architecture</a></li>
             <li><a href="#projects">Work</a></li>
             <li><a href="#contact">Contact</a></li>
         </ul>
@@ -338,8 +415,27 @@
         </script>
     </section>
 
+    <section id="system-design">
+        <h2 class="section-title">03 // System Architecture</h2>
+        <div class="system-container">
+            <div class="system-image-box">
+                <img src="system.png" alt="System Architecture Design" class="system-img">
+            </div>
+            <div class="system-info">
+                <h3>MODULAR BACKEND INFRASTRUCTURE</h3>
+                <p>A comprehensive visualization of the system's core architecture, highlighting the flow of data between neural processing units, encrypted storage layers, and high-performance communication protocols.</p>
+                <ul class="system-features">
+                    <li>Multi-layered Security Protocol</li>
+                    <li>Low-latency Data Pipelines</li>
+                    <li>Distributed Microservices Logic</li>
+                    <li>Real-time Telemetry Processing</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
     <section id="projects">
-        <h2 class="section-title">03 // Additional Work</h2>
+        <h2 class="section-title">04 // Additional Work</h2>
         <div class="project-grid">
             <div class="project-card">
                 <h3>Management System</h3>
@@ -371,7 +467,7 @@
     </section>
 
     <section id="contact" class="contact">
-        <h2 class="section-title">04 // Connect</h2>
+        <h2 class="section-title">05 // Connect</h2>
         <p style="max-width: 600px; margin: 0 auto 2rem;">Always interested in high-impact collaborations and technical challenges.</p>
         <div class="contact-btns">
             <a href="mailto:mayankoriginal711@gmail.com" class="btn">Direct Email</a>
