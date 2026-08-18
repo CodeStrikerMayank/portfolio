@@ -1218,7 +1218,7 @@
         <h1><span class="hero-scramble" id="hero-scramble">MAYANK BHATT</span></h1>
         <p class="hero-subtitle">Software Engineer & Innovation Specialist</p>
         <div class="hero-status-line">Currently: refining trajectory models</div>
-        <div class="hero-tag">2Y — ACTIVE</div>
+        <div class="hero-tag" id="hero-active-tag">— ACTIVE</div>
     </header>
 
     <!-- 01 // Identity -->
@@ -2160,6 +2160,37 @@
                 'color: #00f2ff; font-size: 16px; font-weight: bold; font-family: monospace;',
                 'color: #a0a0a0; font-size: 12px; font-family: monospace;'
             );
+
+            /* ═══════════════════════════════════════════ */
+            /* AUTO-UPDATING ACTIVE-SINCE TIMER            */
+            /* Calculates years from start date (Aug 2024) */
+            /* Auto-updates: 2Y → 3Y → 4Y → ... forever   */
+            /* ═══════════════════════════════════════════ */
+            (function initActiveTimer() {
+                const heroTag = document.getElementById('hero-active-tag');
+                if (!heroTag) return;
+
+                const START_DATE = new Date(2024, 7, 1); // August 1, 2024
+
+                function updateActiveTag() {
+                    const now = new Date();
+                    const diffMs = now - START_DATE;
+                    const diffYears = diffMs / (365.25 * 24 * 60 * 60 * 1000);
+                    const fullYears = Math.floor(diffYears);
+
+                    if (fullYears < 1) {
+                        // Less than a year — show months
+                        const months = Math.max(1, Math.floor(diffMs / (30.44 * 24 * 60 * 60 * 1000)));
+                        heroTag.textContent = months + 'M — ACTIVE';
+                    } else {
+                        heroTag.textContent = fullYears + 'Y — ACTIVE';
+                    }
+                }
+
+                updateActiveTag();
+                // Re-check daily (handles timezone edge cases around anniversary)
+                setInterval(updateActiveTag, 24 * 60 * 60 * 1000);
+            })();
 
         }); // end window.load
     </script>
