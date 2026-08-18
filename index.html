@@ -403,6 +403,8 @@
             padding: 120px 2rem;
             max-width: 1100px;
             margin: 0 auto;
+            content-visibility: auto;
+            contain-intrinsic-size: auto 800px;
         }
 
         h2.section-title {
@@ -1449,7 +1451,7 @@
         <h2 class="section-title scroll-reveal" data-scramble-title>04 // System Architecture</h2>
         <div class="system-container scroll-reveal">
             <div class="system-image-box" id="system-image-box">
-                <img src="system.png" alt="System Architecture Design" class="system-img">
+                <img src="system.png" alt="System Architecture Design" class="system-img" loading="lazy" decoding="async">
                 <!-- Hotspot markers — percentage-based positioning -->
                 <div class="hotspot" style="top: 20%; left: 25%;" data-hotspot>
                     <div class="hotspot-tooltip">
