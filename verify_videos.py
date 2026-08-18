@@ -16,7 +16,7 @@ def verify():
         status = "OK" if exists else "MISSING"
         if not exists:
             all_ok = False
-        print(f"[{status}] {s} (Size: {sz/(1024*1024):.2f} MB)")
+        print(f"[{status}] {s} (Size: {sz/(1024):.1f} KB)")
 
     # 2. Check all video posters
     posters = re.findall(r'poster=["\']([^"\']+)["\']', html)
@@ -31,8 +31,9 @@ def verify():
         print(f"[{status}] {p} (Size: {sz/1024:.1f} KB)")
 
     # 3. Verify faststart on all mp4 files
-    print("\n=== Verifying Faststart (moov atom before mdat atom) on MP4s ===")
+    print("\n=== Verifying Faststart on MP4s ===")
     for s in set(video_srcs):
+        if not s.endswith('.mp4'): continue
         full_p = os.path.join(os.path.dirname(__file__), s)
         if os.path.exists(full_p):
             with open(full_p, 'rb') as f:
