@@ -282,18 +282,30 @@
 
         .logo-container {
             position: relative;
-            margin-bottom: 2.5rem;
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 2rem auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
         }
 
         .logo-video {
-            width: 200px;
-            height: 200px;
+            width: 100%;
+            height: 100%;
+            aspect-ratio: 1 / 1;
             border-radius: 50%;
             object-fit: cover;
             border: 2px solid var(--accent);
-            box-shadow: 0 0 30px rgba(0, 242, 255, 0.2);
+            box-shadow: 0 0 25px rgba(0, 242, 255, 0.25);
             position: relative;
             z-index: 2;
+            display: block;
+            background-color: #050505;
+            will-change: transform;
+            transform: translateZ(0);
+            -webkit-transform: translateZ(0);
         }
 
         /* Scan ring */
@@ -301,17 +313,18 @@
             position: absolute;
             top: 50%;
             left: 50%;
-            width: 230px;
-            height: 230px;
+            width: 176px;
+            height: 176px;
             transform: translate(-50%, -50%);
             border: 1px solid rgba(0, 242, 255, 0.3);
             border-radius: 50%;
             z-index: 1;
             animation: scanPulse 3s ease-in-out infinite;
+            pointer-events: none;
         }
         .scan-ring:nth-child(3) {
-            width: 260px;
-            height: 260px;
+            width: 202px;
+            height: 202px;
             border-color: rgba(0, 242, 255, 0.15);
             animation-delay: 1s;
         }
@@ -575,10 +588,12 @@
             border-color: var(--accent);
         }
 
-        .video-box video {
+        .video-box video, .series-video-box video {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            display: block;
+            background-color: #050505;
             will-change: transform;
             transform: translateZ(0);
             -webkit-transform: translateZ(0);
@@ -593,9 +608,13 @@
             animation: shimmer 1.5s infinite;
             z-index: 1;
             pointer-events: none;
-            transition: opacity 0.4s var(--ease-smooth);
+            transition: opacity 0.4s var(--ease-smooth), visibility 0.4s;
         }
-        .video-shimmer.loaded { opacity: 0; }
+        .video-shimmer.loaded {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
         @keyframes shimmer {
             0% { background-position: 200% 0; }
             100% { background-position: -200% 0; }
@@ -608,17 +627,18 @@
             display: none;
             align-items: center;
             justify-content: center;
-            z-index: 3;
+            z-index: 4;
             cursor: pointer;
-            background: rgba(0,0,0,0.4);
+            background: rgba(0,0,0,0.45);
+            -webkit-tap-highlight-color: transparent;
         }
         .video-play-overlay.show { display: flex; }
         .video-play-overlay svg {
             width: 48px;
             height: 48px;
             fill: var(--accent);
-            opacity: 0.8;
-            filter: drop-shadow(0 0 10px var(--accent));
+            opacity: 0.85;
+            filter: drop-shadow(0 0 12px var(--accent));
             transition: opacity 0.3s, transform 0.3s;
         }
         .video-play-overlay:hover svg { opacity: 1; transform: scale(1.1); }
@@ -1104,6 +1124,9 @@
             .hero-scramble.core-shadow-glow { letter-spacing: 3px; }
             .hero p.hero-subtitle { font-size: 1rem; letter-spacing: 1.5px; }
             .hero-status-line { font-size: 0.75rem; }
+            .logo-container { width: 135px; height: 135px; margin-bottom: 1.8rem; }
+            .scan-ring { width: 158px; height: 158px; }
+            .scan-ring:nth-child(3) { width: 180px; height: 180px; }
             /* Reduce backdrop-filter on mobile for scroll perf */
             nav { backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
             .mobile-menu { backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
@@ -1149,9 +1172,9 @@
             .hero p.hero-subtitle { font-size: 0.88rem; max-width: 90vw; letter-spacing: 1px; }
             .hero-scramble.core-shadow-glow { letter-spacing: 2px; }
             .hero-tag { font-size: 0.65rem; padding: 0.25rem 0.7rem; }
-            .logo-video { width: 140px; height: 140px; }
-            .scan-ring { width: 165px; height: 165px; }
-            .scan-ring:nth-child(3) { width: 188px; height: 188px; }
+            .logo-container { width: 115px; height: 115px; margin-bottom: 1.5rem; }
+            .scan-ring { width: 135px; height: 135px; }
+            .scan-ring:nth-child(3) { width: 155px; height: 155px; }
             .video-showcase { grid-template-columns: 1fr; }
             .series-grid { grid-template-columns: 1fr; }
             .project-grid { grid-template-columns: 1fr; }
@@ -1233,7 +1256,7 @@
     <header class="hero" id="hero">
         <div class="hero-glow-bg" id="hero-glow"></div>
         <div class="logo-container">
-            <video class="logo-video" autoplay muted loop playsinline webkit-playsinline preload="auto" fetchpriority="high">
+            <video class="logo-video" autoplay muted loop playsinline webkit-playsinline preload="auto" fetchpriority="high" poster="adr_poster.jpg">
                 <source src="adr.mp4" type="video/mp4">
             </video>
             <div class="scan-ring"></div>
@@ -1331,15 +1354,15 @@
         <div class="video-showcase scroll-reveal">
             <div class="video-box" data-lightbox-video>
                 <div class="video-shimmer"></div>
-                <div class="video-play-overlay"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
-                <video class="speed-video" autoplay muted loop playsinline webkit-playsinline preload="metadata">
+                <div class="video-play-overlay" aria-label="Play video"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+                <video class="speed-video" autoplay muted loop playsinline webkit-playsinline preload="metadata" poster="hello_1_poster.jpg">
                     <source src="hello_1.mp4" type="video/mp4">
                 </video>
             </div>
             <div class="video-box" data-lightbox-video>
                 <div class="video-shimmer"></div>
-                <div class="video-play-overlay"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
-                <video class="speed-video" autoplay muted loop playsinline webkit-playsinline preload="metadata">
+                <div class="video-play-overlay" aria-label="Play video"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+                <video class="speed-video" autoplay muted loop playsinline webkit-playsinline preload="metadata" poster="VID_poster.jpg">
                     <source src="VID-20260405-WA0008.mp4" type="video/mp4">
                 </video>
             </div>
@@ -1370,10 +1393,10 @@
                 <div class="card-glow"></div>
                 <div class="series-video-box" data-lightbox-video>
                     <div class="video-shimmer"></div>
-                    <div class="video-play-overlay"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
-                    <video class="speed-video" autoplay muted loop playsinline webkit-playsinline preload="metadata">
-                        <source src="Nerual Network/Neural Nexus __ Knowledge Topology Dashboard (1).mp4"
-                            type="video/mp4">
+                    <div class="video-play-overlay" aria-label="Play video"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+                    <video class="speed-video" autoplay muted loop playsinline webkit-playsinline preload="metadata" poster="Nerual Network/neural_nexus_poster.jpg">
+                        <source src="Nerual Network/neural_nexus.mp4" type="video/mp4">
+                        <source src="Nerual Network/Neural Nexus __ Knowledge Topology Dashboard (1).mp4" type="video/mp4">
                     </video>
                     <div class="video-telemetry-tag">REALTIME • TOPOLOGY ENGINE</div>
                 </div>
@@ -1397,8 +1420,8 @@
                 <div class="card-glow"></div>
                 <div class="series-video-box" data-lightbox-video>
                     <div class="video-shimmer"></div>
-                    <div class="video-play-overlay"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
-                    <video class="speed-video" autoplay muted loop playsinline webkit-playsinline preload="metadata">
+                    <div class="video-play-overlay" aria-label="Play video"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+                    <video class="speed-video" autoplay muted loop playsinline webkit-playsinline preload="metadata" poster="Nerual Network/simulationjet_poster.jpg">
                         <source src="Nerual Network/simulationjet.mp4" type="video/mp4">
                     </video>
                     <div class="video-telemetry-tag">REALTIME • AERO SIM</div>
@@ -1422,8 +1445,9 @@
                 <div class="card-glow"></div>
                 <div class="series-video-box" data-lightbox-video>
                     <div class="video-shimmer"></div>
-                    <div class="video-play-overlay"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
-                    <video class="speed-video" autoplay muted loop playsinline webkit-playsinline preload="metadata">
+                    <div class="video-play-overlay" aria-label="Play video"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+                    <video class="speed-video" autoplay muted loop playsinline webkit-playsinline preload="metadata" poster="Nerual Network/simulationdrone_poster.jpg">
+                        <source src="Nerual Network/simulationdrone.mp4" type="video/mp4">
                         <source src="Nerual Network/Simiulationdrone.mp4" type="video/mp4">
                     </video>
                     <div class="video-telemetry-tag">REALTIME • UAV CONTROL</div>
@@ -1447,9 +1471,10 @@
                 <div class="card-glow"></div>
                 <div class="series-video-box" data-lightbox-video>
                     <div class="video-shimmer"></div>
-                    <div class="video-play-overlay"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
-                    <video class="speed-video" autoplay muted loop playsinline webkit-playsinline preload="metadata">
+                    <div class="video-play-overlay" aria-label="Play video"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+                    <video class="speed-video" autoplay muted loop playsinline webkit-playsinline preload="metadata" poster="Nerual Network/trajecotry_poster.jpg">
                         <source src="Nerual Network/trajecotry.mp4" type="video/mp4">
+                        <source src="Nerual Network/trajectory.mp4" type="video/mp4">
                     </video>
                     <div class="video-telemetry-tag">REALTIME • TRAJECTORY CALC</div>
                 </div>
@@ -1670,7 +1695,7 @@
     <!-- Video Lightbox Modal -->
     <div id="video-lightbox">
         <button id="lightbox-close" aria-label="Close">✕</button>
-        <video id="lightbox-video" controls></video>
+        <video id="lightbox-video" controls playsinline webkit-playsinline></video>
     </div>
 
     <script>
@@ -1774,14 +1799,9 @@
         })();
 
         /* ═══════════════════════════════════════════ */
-        /* MAIN INIT ON LOAD                          */
+        /* MAIN INIT ON DOM CONTENT LOADED            */
         /* ═══════════════════════════════════════════ */
-        window.addEventListener('load', () => {
-
-            /* --- Video playback speed (preserved) --- */
-            document.querySelectorAll('.speed-video').forEach(video => {
-                video.playbackRate = 1.5;
-            });
+        document.addEventListener('DOMContentLoaded', () => {
 
             /* --- Hero Scramble Cycle (preserved) --- */
             const scrambleEl = document.getElementById('hero-scramble');
@@ -1806,113 +1826,160 @@
             }
 
             /* ═══════════════════════════════════════════ */
-            /* VIDEO AUTOPLAY — Aggressive mobile support  */
-            /* IntersectionObserver + retry + touch unlock  */
+            /* BULLETPROOF MOBILE & DESKTOP VIDEO ENGINE  */
+            /* Faststart streaming + safe promises + touch */
             /* ═══════════════════════════════════════════ */
-            const allVideos = document.querySelectorAll('video');
+            const allVideos = document.querySelectorAll('video:not(#lightbox-video)');
 
-            // Ensure all video attributes are set programmatically (belt & suspenders)
+            // 1. Configure all videos programmatically for strict mobile policy
             allVideos.forEach(v => {
                 v.muted = true;
+                v.defaultMuted = true;
                 v.loop = true;
                 v.playsInline = true;
                 v.setAttribute('playsinline', '');
                 v.setAttribute('webkit-playsinline', '');
                 v.setAttribute('muted', '');
-                // Keep hero video as auto, lazy-load the rest
-                if (!v.classList.contains('logo-video')) {
-                    v.preload = 'metadata';
+                v.setAttribute('x5-playsinline', '');
+                v.setAttribute('x5-video-player-type', 'h5');
+
+                if (v.classList.contains('speed-video')) {
+                    v.playbackRate = 1.5;
                 }
+
+                // Shimmer dismissal on first available frame
+                const container = v.closest('.video-box, .series-video-box, .logo-container');
+                const shimmer = container ? container.querySelector('.video-shimmer') : null;
+                const hideShimmer = () => {
+                    if (shimmer && !shimmer.classList.contains('loaded')) {
+                        shimmer.classList.add('loaded');
+                    }
+                };
+
+                if (v.readyState >= 2) {
+                    hideShimmer();
+                } else {
+                    v.addEventListener('loadeddata', hideShimmer, { once: true });
+                    v.addEventListener('canplay', hideShimmer, { once: true });
+                    v.addEventListener('playing', hideShimmer, { once: true });
+                    v.addEventListener('timeupdate', hideShimmer, { once: true });
+                }
+                setTimeout(hideShimmer, 2500); // Safety fallback
+
+                v._playPromise = null;
             });
 
-            // Mark shimmer as loaded when video has data
-            allVideos.forEach(v => {
-                const shimmer = v.closest('.video-box, .series-video-box, .logo-container')?.querySelector('.video-shimmer');
-                const markLoaded = () => { if (shimmer) shimmer.classList.add('loaded'); };
-                if (v.readyState >= 2) markLoaded();
-                else v.addEventListener('loadeddata', markLoaded, { once: true });
-            });
+            // Safe play helper to eliminate AbortError and handle mobile autoplay restrictions
+            function safePlay(video) {
+                if (!video) return;
+                video.muted = true;
+                video.defaultMuted = true;
 
-            // Helper: try to play a video with retry logic
-            function tryPlayVideo(video, retries = 3) {
-                if (!video || !video.paused === false) return; // already playing
-                const attempt = () => {
-                    const playPromise = video.play();
-                    if (playPromise !== undefined) {
-                        playPromise.catch((err) => {
-                            if (retries > 0) {
-                                // Retry after a short delay — some mobile browsers
-                                // need a moment after the element enters the DOM
-                                setTimeout(() => tryPlayVideo(video, retries - 1), 300);
-                            } else {
-                                // All retries exhausted — show play overlay
-                                const overlay = video.closest('.video-box, .series-video-box, .logo-container')?.querySelector('.video-play-overlay');
+                const overlay = video.closest('.video-box, .series-video-box, .logo-container')?.querySelector('.video-play-overlay');
+
+                if (video.paused) {
+                    const promise = video.play();
+                    if (promise !== undefined && typeof promise.then === 'function') {
+                        video._playPromise = promise;
+                        promise.then(() => {
+                            video._playPromise = null;
+                            if (overlay) overlay.classList.remove('show');
+                        }).catch(err => {
+                            video._playPromise = null;
+                            if (err.name === 'NotAllowedError') {
+                                if (overlay) overlay.classList.add('show');
+                            } else if (err.name !== 'AbortError') {
                                 if (overlay) overlay.classList.add('show');
                             }
                         });
                     }
-                };
-                // If video has no data yet, wait for it
-                if (video.readyState < 2) {
-                    video.addEventListener('loadeddata', attempt, { once: true });
-                    video.load(); // Force load on mobile
                 } else {
-                    attempt();
+                    if (overlay) overlay.classList.remove('show');
                 }
             }
 
-            // IntersectionObserver: play/pause based on viewport
-            const videoObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    const video = entry.target;
-                    if (entry.isIntersecting) {
-                        tryPlayVideo(video, 3);
-                    } else {
+            // Safe pause helper
+            function safePause(video) {
+                if (!video || video.paused) return;
+                if (video._playPromise) {
+                    video._playPromise.then(() => {
                         if (!video.paused) video.pause();
-                    }
-                });
-            }, { threshold: 0.15 });
+                    }).catch(() => {});
+                } else {
+                    video.pause();
+                }
+            }
 
-            allVideos.forEach(v => videoObserver.observe(v));
+            // Viewport-based playback via IntersectionObserver
+            if ('IntersectionObserver' in window) {
+                const videoObserver = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        const video = entry.target;
+                        if (entry.isIntersecting) {
+                            safePlay(video);
+                        } else {
+                            if (!video.classList.contains('logo-video')) {
+                                safePause(video);
+                            }
+                        }
+                    });
+                }, { threshold: 0.15, rootMargin: '60px 0px 60px 0px' });
 
-            // Immediate attempt to play all currently-visible videos
+                allVideos.forEach(v => videoObserver.observe(v));
+            } else {
+                allVideos.forEach(v => safePlay(v));
+            }
+
+            // Immediate play for visible videos (Hero logo, above-the-fold)
             allVideos.forEach(v => {
                 const rect = v.getBoundingClientRect();
                 if (rect.top < window.innerHeight && rect.bottom > 0) {
-                    tryPlayVideo(v, 3);
+                    safePlay(v);
                 }
             });
 
-            // Touch-to-unlock: On first user touch, try to play ALL videos
-            // (iOS Safari requires user gesture to unlock media playback)
-            let touchUnlocked = false;
-            function unlockAllVideos() {
-                if (touchUnlocked) return;
-                touchUnlocked = true;
+            // Global Touch/Click Gesture Unlock for mobile battery-saver / iOS restrictions
+            let gestureUnlocked = false;
+            function unlockAllMedia() {
+                if (gestureUnlocked) return;
+                gestureUnlocked = true;
+
                 allVideos.forEach(v => {
-                    if (v.paused) {
-                        v.play().then(() => {
-                            // Hide play overlay if it was showing
-                            const overlay = v.closest('.video-box, .series-video-box, .logo-container')?.querySelector('.video-play-overlay');
-                            if (overlay) overlay.classList.remove('show');
-                        }).catch(() => {});
+                    const rect = v.getBoundingClientRect();
+                    if (rect.top < window.innerHeight && rect.bottom > 0) {
+                        safePlay(v);
                     }
                 });
-                // Clean up listeners
-                document.removeEventListener('touchstart', unlockAllVideos);
-                document.removeEventListener('click', unlockAllVideos);
-            }
-            document.addEventListener('touchstart', unlockAllVideos, { once: true, passive: true });
-            document.addEventListener('click', unlockAllVideos, { once: true });
 
-            // Fallback play overlay click handler
+                document.removeEventListener('touchstart', unlockAllMedia);
+                document.removeEventListener('touchend', unlockAllMedia);
+                document.removeEventListener('click', unlockAllMedia);
+                document.removeEventListener('scroll', unlockAllMedia);
+            }
+            document.addEventListener('touchstart', unlockAllMedia, { once: true, passive: true });
+            document.addEventListener('touchend', unlockAllMedia, { once: true, passive: true });
+            document.addEventListener('click', unlockAllMedia, { once: true });
+            document.addEventListener('scroll', unlockAllMedia, { once: true, passive: true });
+
+            // Play overlay click handler
             document.querySelectorAll('.video-play-overlay').forEach(overlay => {
                 overlay.addEventListener('click', (e) => {
                     e.stopPropagation();
                     const video = overlay.closest('.video-box, .series-video-box, .logo-container')?.querySelector('video');
                     if (video) {
-                        video.muted = true;
-                        video.play().then(() => overlay.classList.remove('show')).catch(() => {});
+                        safePlay(video);
+                        overlay.classList.remove('show');
+                    }
+                });
+            });
+
+            // Tap on video box to ensure playback if paused
+            document.querySelectorAll('.video-box, .series-video-box').forEach(box => {
+                box.addEventListener('click', (e) => {
+                    if (e.target.closest('.video-play-overlay')) return;
+                    const video = box.querySelector('video');
+                    if (video && video.paused) {
+                        safePlay(video);
                     }
                 });
             });
@@ -1921,12 +1988,14 @@
             /* SCROLL PROGRESS BAR                        */
             /* ═══════════════════════════════════════════ */
             const scrollProgressBar = document.getElementById('scroll-progress');
-            window.addEventListener('scroll', () => {
-                const scrollTop = window.scrollY;
-                const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-                const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
-                scrollProgressBar.style.width = progress + '%';
-            }, { passive: true });
+            if (scrollProgressBar) {
+                window.addEventListener('scroll', () => {
+                    const scrollTop = window.scrollY;
+                    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+                    const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+                    scrollProgressBar.style.width = progress + '%';
+                }, { passive: true });
+            }
 
             /* ═══════════════════════════════════════════ */
             /* NAV — compact on scroll, active section    */
@@ -1935,34 +2004,38 @@
             const heroSection = document.getElementById('hero');
             const backToTop = document.getElementById('back-to-top');
 
-            const navObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (!entry.isIntersecting) {
-                        mainNav.classList.add('nav-compact');
-                        backToTop.classList.add('show');
-                    } else {
-                        mainNav.classList.remove('nav-compact');
-                        backToTop.classList.remove('show');
-                    }
-                });
-            }, { threshold: 0.1 });
-            navObserver.observe(heroSection);
+            if (mainNav && heroSection && backToTop) {
+                const navObserver = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (!entry.isIntersecting) {
+                            mainNav.classList.add('nav-compact');
+                            backToTop.classList.add('show');
+                        } else {
+                            mainNav.classList.remove('nav-compact');
+                            backToTop.classList.remove('show');
+                        }
+                    });
+                }, { threshold: 0.1 });
+                navObserver.observe(heroSection);
+            }
 
             // Active section highlighting
             const sections = document.querySelectorAll('section[id]');
             const navLinksAll = document.querySelectorAll('.nav-links a, .mobile-menu a');
 
-            const sectionObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const id = entry.target.id;
-                        navLinksAll.forEach(link => {
-                            link.classList.toggle('active', link.getAttribute('data-section') === id);
-                        });
-                    }
-                });
-            }, { threshold: 0.3, rootMargin: '-100px 0px -40% 0px' });
-            sections.forEach(s => sectionObserver.observe(s));
+            if (sections.length > 0) {
+                const sectionObserver = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const id = entry.target.id;
+                            navLinksAll.forEach(link => {
+                                link.classList.toggle('active', link.getAttribute('data-section') === id);
+                            });
+                        }
+                    });
+                }, { threshold: 0.3, rootMargin: '-100px 0px -40% 0px' });
+                sections.forEach(s => sectionObserver.observe(s));
+            }
 
             /* ═══════════════════════════════════════════ */
             /* HAMBURGER MENU                             */
@@ -1970,29 +2043,33 @@
             const hamburger = document.getElementById('hamburger');
             const mobileMenu = document.getElementById('mobile-menu');
 
-            function toggleMobileMenu() {
-                hamburger.classList.toggle('active');
-                mobileMenu.classList.toggle('open');
-                document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
-            }
+            if (hamburger && mobileMenu) {
+                function toggleMobileMenu() {
+                    hamburger.classList.toggle('active');
+                    mobileMenu.classList.toggle('open');
+                    document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
+                }
 
-            hamburger.addEventListener('click', toggleMobileMenu);
-            hamburger.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleMobileMenu(); }});
+                hamburger.addEventListener('click', toggleMobileMenu);
+                hamburger.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleMobileMenu(); }});
 
-            mobileMenu.querySelectorAll('a').forEach(link => {
-                link.addEventListener('click', () => {
-                    hamburger.classList.remove('active');
-                    mobileMenu.classList.remove('open');
-                    document.body.style.overflow = '';
+                mobileMenu.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        hamburger.classList.remove('active');
+                        mobileMenu.classList.remove('open');
+                        document.body.style.overflow = '';
+                    });
                 });
-            });
+            }
 
             /* ═══════════════════════════════════════════ */
             /* BACK TO TOP                                */
             /* ═══════════════════════════════════════════ */
-            backToTop.addEventListener('click', () => {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            });
+            if (backToTop) {
+                backToTop.addEventListener('click', () => {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+            }
 
             /* ═══════════════════════════════════════════ */
             /* SCROLL REVEAL                              */
@@ -2034,14 +2111,16 @@
             /* ═══════════════════════════════════════════ */
             /* HERO PARALLAX GLOW (desktop only)          */
             /* ═══════════════════════════════════════════ */
-            if (!isTouchDevice() && !prefersReducedMotion()) {
+            if (!isTouchDevice() && !prefersReducedMotion() && heroSection) {
                 const heroGlow = document.getElementById('hero-glow');
-                heroSection.addEventListener('mousemove', (e) => {
-                    const rect = heroSection.getBoundingClientRect();
-                    const x = ((e.clientX - rect.left) / rect.width) * 100;
-                    const y = ((e.clientY - rect.top) / rect.height) * 100;
-                    heroGlow.style.background = `radial-gradient(circle at ${x}% ${y}%, rgba(0, 242, 255, 0.08) 0%, transparent 60%)`;
-                });
+                if (heroGlow) {
+                    heroSection.addEventListener('mousemove', (e) => {
+                        const rect = heroSection.getBoundingClientRect();
+                        const x = ((e.clientX - rect.left) / rect.width) * 100;
+                        const y = ((e.clientY - rect.top) / rect.height) * 100;
+                        heroGlow.style.background = `radial-gradient(circle at ${x}% ${y}%, rgba(0, 242, 255, 0.08) 0%, transparent 60%)`;
+                    });
+                }
             }
 
             /* ═══════════════════════════════════════════ */
@@ -2053,7 +2132,7 @@
                         const rect = card.getBoundingClientRect();
                         const x = (e.clientX - rect.left) / rect.width;
                         const y = (e.clientY - rect.top) / rect.height;
-                        const rotateX = (0.5 - y) * 8; // max ~4 degrees
+                        const rotateX = (0.5 - y) * 8;
                         const rotateY = (x - 0.5) * 8;
                         card.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px)`;
                     });
@@ -2127,35 +2206,48 @@
             const lightboxVideo = document.getElementById('lightbox-video');
             const lightboxClose = document.getElementById('lightbox-close');
 
-            document.querySelectorAll('[data-lightbox-video]').forEach(container => {
-                container.addEventListener('click', (e) => {
-                    // Don't trigger if they clicked the play overlay itself
-                    if (e.target.closest('.video-play-overlay')) return;
-                    const sourceVideo = container.querySelector('video');
-                    if (!sourceVideo) return;
-                    const src = sourceVideo.querySelector('source')?.src || sourceVideo.src;
-                    if (!src) return;
-                    lightboxVideo.src = src;
-                    lightboxVideo.muted = false;
-                    lightbox.classList.add('open');
-                    document.body.style.overflow = 'hidden';
-                    lightboxVideo.play().catch(() => {});
-                });
-            });
+            if (lightbox && lightboxVideo && lightboxClose) {
+                lightboxVideo.setAttribute('playsinline', '');
+                lightboxVideo.setAttribute('webkit-playsinline', '');
 
-            function closeLightbox() {
-                lightbox.classList.remove('open');
-                lightboxVideo.pause();
-                lightboxVideo.removeAttribute('src');
-                document.body.style.overflow = '';
+                document.querySelectorAll('[data-lightbox-video]').forEach(container => {
+                    container.addEventListener('click', (e) => {
+                        if (e.target.closest('.video-play-overlay')) return;
+                        const sourceVideo = container.querySelector('video');
+                        if (!sourceVideo) return;
+                        const src = sourceVideo.querySelector('source')?.src || sourceVideo.currentSrc || sourceVideo.src;
+                        if (!src) return;
+
+                        lightboxVideo.src = src;
+                        lightboxVideo.muted = false;
+                        lightbox.classList.add('open');
+                        document.body.style.overflow = 'hidden';
+
+                        const p = lightboxVideo.play();
+                        if (p && typeof p.then === 'function') {
+                            p.catch(() => {
+                                lightboxVideo.muted = true;
+                                lightboxVideo.play().catch(() => {});
+                            });
+                        }
+                    });
+                });
+
+                function closeLightbox() {
+                    lightbox.classList.remove('open');
+                    lightboxVideo.pause();
+                    lightboxVideo.removeAttribute('src');
+                    lightboxVideo.load();
+                    document.body.style.overflow = '';
+                }
+                lightboxClose.addEventListener('click', closeLightbox);
+                lightbox.addEventListener('click', (e) => {
+                    if (e.target === lightbox) closeLightbox();
+                });
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && lightbox.classList.contains('open')) closeLightbox();
+                });
             }
-            lightboxClose.addEventListener('click', closeLightbox);
-            lightbox.addEventListener('click', (e) => {
-                if (e.target === lightbox) closeLightbox();
-            });
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape' && lightbox.classList.contains('open')) closeLightbox();
-            });
 
             /* ═══════════════════════════════════════════ */
             /* SYSTEM ARCHITECTURE HOTSPOTS               */
@@ -2168,7 +2260,6 @@
                     if (!wasActive) hotspot.classList.add('active');
                 });
             });
-            // Close hotspots on outside click
             document.addEventListener('click', () => {
                 document.querySelectorAll('[data-hotspot]').forEach(h => h.classList.remove('active'));
             });
@@ -2194,7 +2285,7 @@
                 const heroTag = document.getElementById('hero-active-tag');
                 if (!heroTag) return;
 
-                const START_DATE = new Date(2024, 7, 1); // August 1, 2024
+                const START_DATE = new Date(2024, 7, 1);
 
                 function updateActiveTag() {
                     const now = new Date();
@@ -2203,7 +2294,6 @@
                     const fullYears = Math.floor(diffYears);
 
                     if (fullYears < 1) {
-                        // Less than a year — show months
                         const months = Math.max(1, Math.floor(diffMs / (30.44 * 24 * 60 * 60 * 1000)));
                         heroTag.textContent = months + 'M — ACTIVE';
                     } else {
@@ -2212,11 +2302,10 @@
                 }
 
                 updateActiveTag();
-                // Re-check daily (handles timezone edge cases around anniversary)
                 setInterval(updateActiveTag, 24 * 60 * 60 * 1000);
             })();
 
-        }); // end window.load
+        }); // end DOMContentLoaded
     </script>
 </body>
 
